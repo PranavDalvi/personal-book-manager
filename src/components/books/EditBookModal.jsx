@@ -66,6 +66,7 @@ export default function EditBookModal({ book, onClose, onUpdated }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
+            autoFocus
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -81,7 +82,7 @@ export default function EditBookModal({ book, onClose, onUpdated }) {
           <TagsMultiSelect tags={tags} setTags={setTags} />
 
           <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger>
+            <SelectTrigger className="w-full h-10">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
 
@@ -94,7 +95,11 @@ export default function EditBookModal({ book, onClose, onUpdated }) {
             </SelectContent>
           </Select>
 
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={!title || submitting}
+          >
             {submitting ? "Updating...." : "Update Book"}
           </Button>
         </form>

@@ -23,6 +23,7 @@ export default function DashboardPage() {
   const [statusFilter, setStatusFilter] = useState("");
   const [tagFilter, setTagFilter] = useState("");
 
+  // Simple auth check
   useEffect(() => {
     const token = getToken();
 

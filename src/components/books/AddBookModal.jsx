@@ -72,6 +72,7 @@ export default function AddBookModal({ onBookCreated }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
+            autoFocus
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -87,7 +88,7 @@ export default function AddBookModal({ onBookCreated }) {
           <TagsMultiSelect tags={tags} setTags={setTags} />
 
           <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger>
+            <SelectTrigger className="w-full h-10">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
 
@@ -100,7 +101,11 @@ export default function AddBookModal({ onBookCreated }) {
             </SelectContent>
           </Select>
 
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={!title || submitting}
+          >
             {submitting ? "Saving..." : "Add Book"}
           </Button>
         </form>
