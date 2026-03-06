@@ -28,9 +28,9 @@ Users can **register, login, and manage their personal reading list** with tags,
 
 # ⚙️ Setup Instructions
 
-## Download / Clone the repository
+1. Download / Clone the repository
 
-## Install dependencies
+2. Install dependencies
 
 ```
 npm install
@@ -38,13 +38,13 @@ npm install
 
 ---
 
-## Configure environment variables
+3. Configure environment variables
 
 Create a `.env` file and copy the contains of .env.sample
 
 ---
 
-## 4️⃣ Run the development server
+4. Run the development server
 
 ```
 npm run dev
