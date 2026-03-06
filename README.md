@@ -58,7 +58,7 @@ http://localhost:3000
 
 ---
 
-- For API endpoints details please refer (endpointTest.md)[https://github.com/PranavDalvi/personal-book-manager/blob/main/endpointTest.md].
+- For API endpoints details please refer [endpointTest.md](https://github.com/PranavDalvi/personal-book-manager/blob/main/endpointTest.md).
 
 # 👨‍💻 Author
 
