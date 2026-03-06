@@ -25,16 +25,20 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const token = getToken();
+
     if (!token) {
       router.push("/login");
     }
-    fetchBooks();
   }, []);
 
   useEffect(() => {
+    const token = getToken();
+
+    if (!token) return;
     fetchBooks();
   }, [statusFilter, tagFilter]);
 
+  // Fetch books for the current user with optional filters
   async function fetchBooks() {
     try {
       const filters = {};
@@ -78,50 +82,52 @@ export default function DashboardPage() {
     <>
       <Navbar />
       <div className="min-h-screen bg-zinc-50 p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold">My Books</h1>
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-semibold">My Books</h1>
+            <AddBookModal onBookCreated={fetchBooks} />
+          </div>
+          {editingBook && (
+            <EditBookModal
+              book={editingBook}
+              onClose={() => setEditingBook(null)}
+              onUpdated={fetchBooks}
+            />
+          )}
           <FilterBar
             statusFilter={statusFilter}
             setStatusFilter={setStatusFilter}
             tagFilter={tagFilter}
             setTagFilter={setTagFilter}
           />
-          <AddBookModal onBookCreated={fetchBooks} />
-        </div>
-        {editingBook && (
-          <EditBookModal
-            book={editingBook}
-            onClose={() => setEditingBook(null)}
-            onUpdated={fetchBooks}
+
+          <DashboardStats
+            total={totalBooks}
+            reading={readingBooks}
+            completed={completedBooks}
+            wantToRead={wantToReadBooks}
           />
-        )}
 
-        <DashboardStats
-          total={totalBooks}
-          reading={readingBooks}
-          completed={completedBooks}
-          wantToRead={wantToReadBooks}
-        />
-
-        {loading && <p className="text-gray-500">Loading books...</p>}
-        {!loading && books.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            <p className="text-lg font-medium">No books yet</p>
-            <p className="text-sm">Add your first book to get started.</p>
-          </div>
-        )}
-        {!loading && books.length > 0 && (
-          <div className="space-y-4">
-            {books.map((book) => (
-              <BookCard
-                key={book._id}
-                book={book}
-                onDelete={handleDelete}
-                onEdit={(book) => setEditingBook(book)}
-              />
-            ))}
-          </div>
-        )}
+          {loading && <p className="text-gray-500">Loading books...</p>}
+          {!loading && books.length === 0 && (
+            <div className="text-center py-12 text-gray-500">
+              <p className="text-lg font-medium">No books yet</p>
+              <p className="text-sm">Add your first book to get started.</p>
+            </div>
+          )}
+          {!loading && books.length > 0 && (
+            <div className="space-y-4">
+              {books.map((book) => (
+                <BookCard
+                  key={book._id}
+                  book={book}
+                  onDelete={handleDelete}
+                  onEdit={(book) => setEditingBook(book)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
