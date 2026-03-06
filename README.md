@@ -58,6 +58,8 @@ http://localhost:3000
 
 ---
 
+- For API endpoints details please refer `endpointTest.md`.
+
 # 👨‍💻 Author
 
 Pranav Dalvi
