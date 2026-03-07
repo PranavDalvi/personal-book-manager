@@ -9,6 +9,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { getToken } from "@/lib/auth";
 import { deleteBook, getBooks } from "@/services/books.service";
+import { getBooksMetrics } from "@/services/metrics.service";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -23,6 +24,8 @@ export default function DashboardPage() {
   const [statusFilter, setStatusFilter] = useState("");
   const [tagFilter, setTagFilter] = useState("");
 
+  const [metrics, setMetrics] = useState(null);
+
   // Simple auth check
   useEffect(() => {
     const token = getToken();
@@ -30,6 +33,7 @@ export default function DashboardPage() {
     if (!token) {
       router.push("/login");
     }
+    fetchMetrics();
   }, []);
 
   useEffect(() => {
@@ -58,6 +62,15 @@ export default function DashboardPage() {
     }
   }
 
+  async function fetchMetrics() {
+    try {
+      const data = await getBooksMetrics();
+      setMetrics(data);
+    } catch (err) {
+      toast.error(`ERROR ${err.message}`);
+    }
+  }
+
   async function handleDelete(id) {
     if (!confirm("Delete this book?")) return;
 
@@ -65,6 +78,7 @@ export default function DashboardPage() {
       await deleteBook(id);
       toast.success("Book deleted");
       fetchBooks();
+      fetchMetrics();
     } catch (err) {
       toast.error(err.message);
     }
@@ -86,13 +100,21 @@ export default function DashboardPage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-semibold">My Books</h1>
-            <AddBookModal onBookCreated={fetchBooks} />
+            <AddBookModal
+              onBookCreated={() => {
+                fetchBooks();
+                fetchMetrics();
+              }}
+            />
           </div>
           {editingBook && (
             <EditBookModal
               book={editingBook}
               onClose={() => setEditingBook(null)}
-              onUpdated={fetchBooks}
+              onUpdated={() => {
+                fetchBooks();
+                fetchMetrics();
+              }}
             />
           )}
           <FilterBar
@@ -103,10 +125,10 @@ export default function DashboardPage() {
           />
 
           <DashboardStats
-            total={totalBooks}
-            reading={readingBooks}
-            completed={completedBooks}
-            wantToRead={wantToReadBooks}
+            total={metrics?.total || 0}
+            reading={metrics?.reading || 0}
+            completed={metrics?.completed || 0}
+            wantToRead={metrics?.wantToRead || 0}
           />
 
           {loading && <p className="text-gray-500">Loading books...</p>}

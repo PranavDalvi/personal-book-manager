@@ -1,14 +1,6 @@
-function getAuthHeaders() {
-  const token = localStorage.getItem("token");
-
-  return {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  };
-}
+import { getAuthHeaders } from "./getAuthHeaders";
 
 export async function getBooks(filters = {}) {
-  const token = localStorage.getItem("token");
   const query = new URLSearchParams(filters).toString();
   const res = await fetch(`/api/books?${query}`, {
     headers: getAuthHeaders(),
